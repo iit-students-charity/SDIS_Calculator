@@ -1,8 +1,11 @@
 package view;
 
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 
+
 public class CalculatorForm {
+    private ExpressionTreePanel expressionTreePanel;
     private ExpressionRowPanel expressionRowPanel;
     private OperButtonPanel operButtonPanel;
 
@@ -10,6 +13,7 @@ public class CalculatorForm {
 
 
     public CalculatorForm() {
+        expressionTreePanel = new ExpressionTreePanel();
         expressionRowPanel = new ExpressionRowPanel();
         operButtonPanel = new OperButtonPanel(expressionRowPanel);
 
@@ -21,13 +25,15 @@ public class CalculatorForm {
         return gridPane;
     }
 
-
     /*
      *      Configs
      */
 
     private void configureGridPane() {
-        gridPane.add(expressionRowPanel.getExpRowScrollPane(), 0, 0);
-        gridPane.add(operButtonPanel.getGridPane(), 0, 1);
+        gridPane.setAlignment(Pos.CENTER);
+
+        gridPane.add(expressionTreePanel.getExpressionTree(), 0, 0, 1, 2);
+        gridPane.add(expressionRowPanel.getExpRowScrollPane(), 1, 0);
+        gridPane.add(operButtonPanel.getGridPane(), 1, 1);
     }
 }

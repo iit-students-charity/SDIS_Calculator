@@ -1,9 +1,7 @@
 package model;
 
-public class OperatorFactory {
-    public enum Type { REVERSE, SQRT, PLUS, MINUS, DIVIDE, MULTIPLICATE, MOD }
 
-    public static final String REVERSE = "1/x";
+public class OperatorFactory {
     public static final String SQRT = "√";
     public static final String PLUS = "+";
     public static final String MINUS = "-";
@@ -12,11 +10,8 @@ public class OperatorFactory {
     public static final String MOD = "%";
 
 
-    public static Operator getOperator(Type type) throws Exception {
-        switch (type) {
-            case REVERSE: {
-                return new UnaryOperator(REVERSE);
-            }
+    public static Operator getOperator(String operator) {
+        switch (operator) {
             case SQRT: {
                 return new UnaryOperator(SQRT);
             }
@@ -37,6 +32,6 @@ public class OperatorFactory {
             }
         }
 
-        throw new Exception("No operation matches the type given");
+        return null;
     }
 }

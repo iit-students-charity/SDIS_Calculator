@@ -4,6 +4,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 
+
 public class ExpressionRowPanel {
     private TextField expressionRowTextField;
 
@@ -31,15 +32,19 @@ public class ExpressionRowPanel {
 
     private void configureExpressionRowTextField() {
         expressionRowTextField.setEditable(false);
-        expressionRowTextField.setFont(new Font("Cambria Math", 20));
+        expressionRowTextField.setFont(new Font("Segoe UI", 18));
+        expressionRowTextField.setPrefHeight(50);
+        expressionRowTextField.setPrefWidth(1000);
+
+        expressionRowTextField.textProperty().addListener(e -> {
+            expressionRowTextField.positionCaret(expressionRowTextField.getText().length());
+        });
     }
 
     private void configureExpRowScrollPane() {
         expRowScrollPane.setContent(expressionRowTextField);
         expRowScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        expRowScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        expRowScrollPane.setPannable(true);
+        expRowScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        expRowScrollPane.setPrefWidth(100);
     }
-
-
 }

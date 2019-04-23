@@ -1,5 +1,6 @@
 package model;
 
+
 public class BinaryOperator implements Operator {
     private String stringSource;
     private Operand operand1;
@@ -11,7 +12,7 @@ public class BinaryOperator implements Operator {
     }
 
     @Override
-    public double result() throws Exception {
+    public double result() {
         switch (stringSource) {
             case OperatorFactory.PLUS: {
                 return operand1.doubleSource() + operand2.doubleSource();
@@ -30,12 +31,7 @@ public class BinaryOperator implements Operator {
             }
         }
 
-        throw new Exception("Not a binary operator");
-    }
-
-    @Override
-    public String stringSource() {
-        return stringSource;
+        return 0;
     }
 
     public void setOperand1(Operand operand) {
@@ -44,5 +40,10 @@ public class BinaryOperator implements Operator {
 
     public void setOperand2(Operand operand) {
         operand2 = operand;
+    }
+
+    @Override
+    public String stringSource() {
+        return stringSource;
     }
 }

@@ -1,5 +1,6 @@
 package model;
 
+
 public class UnaryOperator implements Operator {
     private String stringSource;
     private Operand operand;
@@ -10,17 +11,14 @@ public class UnaryOperator implements Operator {
     }
 
     @Override
-    public double result() throws Exception {
+    public double result() {
         switch (stringSource) {
-            case OperatorFactory.REVERSE: {
-                return 1 / operand.doubleSource();
-            }
             case OperatorFactory.SQRT: {
                 return Math.sqrt(operand.doubleSource());
             }
         }
 
-        throw new Exception("Not an unary operator");
+        return 0;
     }
 
     @Override
