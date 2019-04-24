@@ -1,6 +1,6 @@
 package view;
 
-import controller.RPNConverter;
+import controller.RPNExpressionConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -17,6 +17,9 @@ public class OperButtonPanel {
     public static final String DOT = ".";
     public static final String EQUAL = "=";
     public static final String REVERSE = "1/x";
+    public static final String LOG = "log";
+    public static final String LN = "ln";
+    public static final String N_FACTORIAL = "n!";
 
     public static final String ONE = "1";
     public static final String TWO = "2";
@@ -225,7 +228,11 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> equalEventHandler = e -> {
-        RPNConverter.convert(expRowTextField.getText());
+        try {
+            RPNExpressionConverter.convert(expRowTextField.getText());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     };
 
     private EventHandler<ActionEvent> reverseEventHandler = e -> {

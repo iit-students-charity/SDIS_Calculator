@@ -8,9 +8,12 @@ public class OperatorFactory {
     public static final String DIVIDE = "/";
     public static final String MULTIPLICATE = "*";
     public static final String MOD = "%";
+    public static final String LOG = "lg";
+    public static final String LN = "ln";
+    public static final String FACTORIAL = "!";
 
 
-    public static Operator getOperator(String operator) {
+    public static Token getOperator(String operator) {
         switch (operator) {
             case SQRT: {
                 return new UnaryOperator(SQRT);
@@ -29,6 +32,15 @@ public class OperatorFactory {
             }
             case MOD: {
                 return new BinaryOperator(MOD);
+            }
+            case LOG: {
+                return new UnaryOperator(LOG);
+            }
+            case LN: {
+                return new UnaryOperator(LOG);
+            }
+            case FACTORIAL: {
+                return new UnaryOperator(LOG);
             }
         }
 

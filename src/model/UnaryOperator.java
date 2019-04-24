@@ -1,29 +1,43 @@
 package model;
 
 
-public class UnaryOperator implements Operator {
-    private String stringSource;
+public class UnaryOperator extends Token implements Operator {
     private Operand operand;
 
 
-    public UnaryOperator(String stringSource) {
-        this.stringSource = stringSource;
+    public UnaryOperator(String source) {
+        super.source = source;
+    }
+
+    public UnaryOperator(String source, Operand operand) {
+        this(source);
+        this.operand = operand;
     }
 
     @Override
     public double result() {
-        switch (stringSource) {
+        switch (source) {
             case OperatorFactory.SQRT: {
-                return Math.sqrt(operand.doubleSource());
+                return Math.sqrt(operand.value());
+            }
+            case OperatorFactory.LOG: {
+                return Math.log10(operand.value());
+            }
+            case OperatorFactory.LN: {
+                return Math.log(operand.value());
+            }
+            case OperatorFactory.FACTORIAL: {
+                int factorial = 1;
+
+                for (int positiveInt = 2; positiveInt <= (int) operand.value(); positiveInt++) {
+                    factorial *= positiveInt;
+                }
+
+                return factorial;
             }
         }
 
         return 0;
-    }
-
-    @Override
-    public String stringSource() {
-        return stringSource;
     }
 
     public void setOperand(Operand operand) {

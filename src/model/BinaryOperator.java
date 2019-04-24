@@ -1,49 +1,49 @@
 package model;
 
 
-public class BinaryOperator implements Operator {
-    private String stringSource;
-    private Operand operand1;
-    private Operand operand2;
+public class BinaryOperator extends Token implements Operator {
+    private Operand leftOperand;
+    private Operand rightOperand;
 
 
-    public BinaryOperator(String stringSource) {
-        this.stringSource = stringSource;
+    public BinaryOperator(String source) {
+        this.source = source;
+    }
+
+    public BinaryOperator(String source, Operand leftOperand, Operand rightOperand) {
+        this(source);
+        this.leftOperand = leftOperand;
+        this.rightOperand = rightOperand;
     }
 
     @Override
     public double result() {
-        switch (stringSource) {
+        switch (source) {
             case OperatorFactory.PLUS: {
-                return operand1.doubleSource() + operand2.doubleSource();
+                return leftOperand.value() + rightOperand.value();
             }
             case OperatorFactory.MINUS: {
-                return operand1.doubleSource() - operand2.doubleSource();
+                return leftOperand.value() - rightOperand.value();
             }
             case OperatorFactory.DIVIDE: {
-                return operand1.doubleSource() / operand2.doubleSource();
+                return leftOperand.value() / rightOperand.value();
             }
             case OperatorFactory.MULTIPLICATE: {
-                return operand1.doubleSource() * operand2.doubleSource();
+                return leftOperand.value() * rightOperand.value();
             }
             case OperatorFactory.MOD: {
-                return operand1.doubleSource() % operand2.doubleSource();
+                return leftOperand.value() % rightOperand.value();
             }
         }
 
         return 0;
     }
 
-    public void setOperand1(Operand operand) {
-        operand1 = operand;
+    public void setLeftOperand(Operand operand) {
+        leftOperand = operand;
     }
 
-    public void setOperand2(Operand operand) {
-        operand2 = operand;
-    }
-
-    @Override
-    public String stringSource() {
-        return stringSource;
+    public void setRightOperand(Operand operand) {
+        rightOperand = operand;
     }
 }

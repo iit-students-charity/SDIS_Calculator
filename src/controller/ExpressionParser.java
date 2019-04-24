@@ -28,18 +28,18 @@ public class ExpressionParser {
 
                 operStack.push(root);
             } else {
-                root = new ExpressionTreeNode(OperatorFactory.getOperator(
+                /*root = new ExpressionTreeNode(OperatorFactory.getOperator(
                         expressionRPN.substring(expStringIndex, expStringIndex + 1))
-                );
+                );*/
 
                 operand1 = operStack.pop();
                 operand2 = operStack.pop();
 
-                root.setOperand1(operand1);
-                root.setOperand2(operand2);
+                //root.setLeftOperand(operand1);
+                //root.setRightOperand(operand2);
 
-                operStack.push(root);
-                System.out.println(root);
+                //operStack.push(root);
+                //System.out.println(root);
             }
         }
 

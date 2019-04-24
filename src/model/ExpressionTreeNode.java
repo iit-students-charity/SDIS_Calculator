@@ -2,8 +2,8 @@ package model;
 
 
 public class ExpressionTreeNode {
-    private ExpressionTreeNode operand1;
-    private ExpressionTreeNode operand2;
+    private ExpressionTreeNode leftOperand;
+    private ExpressionTreeNode rightOperand;
     private Operator operator;
     private Operand result;
 
@@ -13,16 +13,16 @@ public class ExpressionTreeNode {
     }
 
     public ExpressionTreeNode(Operand result) {
-        operand1 = null;
-        operand2 = null;
+        leftOperand = null;
+        rightOperand = null;
         operator = null;
         this.result = result;
     }
 
     public ExpressionTreeNode() {
         operator = null;
-        operand1 = null;
-        operand2 = null;
+        leftOperand = null;
+        rightOperand = null;
         result = null;
     }
 
@@ -34,19 +34,19 @@ public class ExpressionTreeNode {
         return new Operand(operator.result());
     }
 
-    public void setOperand1(ExpressionTreeNode operand1) {
-        this.operand1 = operand1;
+    public void setLeftOperand(ExpressionTreeNode leftOperand) {
+        this.leftOperand = leftOperand;
     }
 
-    public void setOperand2(ExpressionTreeNode operand2) {
-        this.operand2 = operand2;
+    public void setRightOperand(ExpressionTreeNode rightOperand) {
+        this.rightOperand = rightOperand;
     }
 
-    public ExpressionTreeNode getOperand1() {
-        return operand1;
+    public ExpressionTreeNode getLeftOperand() {
+        return leftOperand;
     }
 
-    public ExpressionTreeNode getOperand2() {
-        return operand2;
+    public ExpressionTreeNode getRightOperand() {
+        return rightOperand;
     }
 }

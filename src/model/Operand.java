@@ -1,20 +1,22 @@
 package model;
 
 
-public class Operand {
-    private double doubleSource;
+public class Operand extends Token {
+    private double value;
 
 
-    public Operand(double doubleSource) {
-        this.doubleSource = doubleSource;
+    public Operand(String source) throws NumberFormatException {
+        super.source = source;
+
+        value = Double.parseDouble(source);
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(doubleSource);
+    public Operand(double value) {
+        this.value = value;
+        super.source = String.valueOf(this.value);
     }
 
-    public double doubleSource() {
-        return doubleSource;
+    public double value() {
+        return value;
     }
 }

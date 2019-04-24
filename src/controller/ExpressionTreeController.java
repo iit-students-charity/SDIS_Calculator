@@ -12,7 +12,7 @@ public class ExpressionTreeController {
     }
 
     public void parse(String expression) {
-        String expressionRPN = RPNConverter.convert(expression);
-        expressionTree.setRoot(ExpressionParser.parse(expressionRPN));
+        //String expressionRPN = RPNExpressionConverter.convert(expression);
+        //expressionTree.setRoot(ExpressionParser.parse(expressionRPN));
     }
 }
