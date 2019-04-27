@@ -1,13 +1,10 @@
 package controller;
 
 import model.*;
-
 import java.util.*;
 
 public class RPNExpressionConverter {
-    private static final String OPEN_BRACKET = "(";
-    private static final String CLOSE_BRACKET = ")";
-    private static final String DOT = ".";
+    public static final String DOT = ".";
     private static final String EXPRESSION_BORDER = "$";
 
 
@@ -29,24 +26,23 @@ public class RPNExpressionConverter {
                 }
 
                 currentOperationSymbol = expression.substring(expIndex, expIndex + 1);
-                System.out.println(currentOperationSymbol);
 
                 // if factorial found
                 if (expression.substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length())
                         .equals(OperatorFactory.FACTORIAL)) {
 
                     expressionRPN.addToken(OperatorFactory.getOperator(expression
-                            .substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length())));
+                            .substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length()))); // why so hard? just OF.FACTORIAL mb?
 
                     continue;
                 }
 
                 // if open bracket found
-                if (expression.substring(expIndex, expIndex + OPEN_BRACKET.length())
-                        .equals(OPEN_BRACKET)) {
+                if (expression.substring(expIndex, expIndex + Bracket.OPEN.length())
+                        .equals(Bracket.OPEN)) {
 
-                    operatorStack.push(OPEN_BRACKET);
-                    expIndex += OPEN_BRACKET.length() - 1;
+                    operatorStack.push(Bracket.OPEN);
+                    expIndex += Bracket.OPEN.length() - 1;
                     continue;
                 }
 
@@ -54,12 +50,12 @@ public class RPNExpressionConverter {
                 if (currentOperationSymbol.equals(OperatorFactory.MINUS)
                         || currentOperationSymbol.equals(OperatorFactory.PLUS)) {
 
-                    if (expIndex == 0 || expression.substring(expIndex - 1, expIndex).equals(OPEN_BRACKET)) {
+                    if (expIndex == 0 || expression.substring(expIndex - 1, expIndex).equals(Bracket.OPEN)) {
                         operatorStack.push(expression.substring(expIndex, expIndex + 1));
                     } else {
                         do {
                             if (operatorStack.peek().equals(EXPRESSION_BORDER)
-                                    || operatorStack.peek().equals(OPEN_BRACKET)) {
+                                    || operatorStack.peek().equals(Bracket.OPEN)) {
 
                                 operatorStack.push(currentOperationSymbol);
 
@@ -104,15 +100,16 @@ public class RPNExpressionConverter {
                 }
 
                 // if close bracket found
-                if (expression.substring(expIndex, expIndex + CLOSE_BRACKET.length())
-                        .equals(CLOSE_BRACKET)) {
+                if (expression.substring(expIndex, expIndex + Bracket.CLOSE.length())
+                        .equals(Bracket.CLOSE)) {
 
                     do {
                         if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
                             throw new Exception("Error: bracket at begin is not closed");
-                        } else if (operatorStack.peek().equals(OPEN_BRACKET)) {
+                        } else if (operatorStack.peek().equals(Bracket.OPEN)) {
                             operatorStack.pop();
-                            if (operatorStack.peek().equals(OperatorFactory.LOG) || operatorStack.peek().equals(OperatorFactory.LN) ||
+
+                            if (operatorStack.peek().equals(OperatorFactory.LG) || operatorStack.peek().equals(OperatorFactory.LN) ||
                                     operatorStack.peek().equals("+/-")) {
 
                                 if (!operatorStack.isEmpty()) {
@@ -139,7 +136,7 @@ public class RPNExpressionConverter {
                     do {
                         if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
                             break;
-                        } else if (operatorStack.peek().equals(OPEN_BRACKET)) {
+                        } else if (operatorStack.peek().equals(Bracket.OPEN)) {
                             throw new Exception("Error: open bracket in the end of the expression");
                         }
 
@@ -160,12 +157,12 @@ public class RPNExpressionConverter {
                     continue;
                 }
 
-                // if log() found
-                if (expression.substring(expIndex, expIndex + OperatorFactory.LOG.length())
-                        .equals(OperatorFactory.LOG)) {
+                // if lg() found
+                if (expression.substring(expIndex, expIndex + OperatorFactory.LG.length())
+                        .equals(OperatorFactory.LG)) {
 
-                    operatorStack.push(OperatorFactory.LOG);
-                    expIndex += OperatorFactory.LOG.length() - 1;
+                    operatorStack.push(OperatorFactory.LG);
+                    expIndex += OperatorFactory.LG.length() - 1;
                     continue;
                 }
 

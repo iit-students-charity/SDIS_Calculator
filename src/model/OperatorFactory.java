@@ -8,7 +8,7 @@ public class OperatorFactory {
     public static final String DIVIDE = "/";
     public static final String MULTIPLICATE = "*";
     public static final String MOD = "%";
-    public static final String LOG = "lg";
+    public static final String LG = "lg";
     public static final String LN = "ln";
     public static final String FACTORIAL = "!";
 
@@ -33,14 +33,14 @@ public class OperatorFactory {
             case MOD: {
                 return new BinaryOperator(MOD);
             }
-            case LOG: {
-                return new UnaryOperator(LOG);
+            case LG: {
+                return new UnaryOperator(LG);
             }
             case LN: {
-                return new UnaryOperator(LOG);
+                return new UnaryOperator(LN);
             }
             case FACTORIAL: {
-                return new UnaryOperator(LOG);
+                return new UnaryOperator(FACTORIAL);
             }
         }
 

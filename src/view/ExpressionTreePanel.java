@@ -1,19 +1,26 @@
 package view;
 
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
-import model.ExpressionTree;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import model.ExpressionTreeNode;
 
 
 public class ExpressionTreePanel {
-    private ExpressionTree expressionTree;
+    private static final int PANEL_WIDTH = 200;
 
     private TreeView<ExpressionTreeNode> expressionTreeView;
+
+    private GridPane gridPane;
 
 
     public ExpressionTreePanel() {
         expressionTreeView = new TreeView<>();
-        configureTree();
+
+        gridPane = new GridPane();
+
+        configureGridPane();
     }
 
     public TreeView<ExpressionTreeNode> getExpressionTree() {
@@ -24,12 +31,16 @@ public class ExpressionTreePanel {
      *      Configs
      */
 
-    private void configureTree() {
-        expressionTreeView.setEditable(false);
-        expressionTreeView.setPrefWidth(200);
-    }
+    private void configureGridPane() {
+        TextField result = new TextField();
 
-    private void setExpressionTree(ExpressionTree expressionTree) {
-        this.expressionTree = expressionTree;
+        result.setEditable(false);
+        result.setFont(new Font("Segoe UI", 18));
+        result.setPrefHeight(50);
+        result.setPrefWidth(PANEL_WIDTH);
+        expressionTreeView.setEditable(false);
+
+        gridPane.add(result, 0, 0);
+
     }
 }

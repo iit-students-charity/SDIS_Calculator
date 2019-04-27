@@ -1,25 +1,23 @@
 package view;
 
+import controller.ExpressionTreeController;
 import controller.RPNExpressionConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import model.Bracket;
 import model.OperatorFactory;
 
 
 public class OperButtonPanel {
-    public static final String OPEN_BRACKET = "(";
-    public static final String CLOSE_BRACKET = ")";
     public static final String CLEAR = "C";
     public static final String BACKSPACE = "←";
-    public static final String DOT = ".";
     public static final String EQUAL = "=";
     public static final String REVERSE = "1/x";
-    public static final String LOG = "log";
-    public static final String LN = "ln";
-    public static final String N_FACTORIAL = "n!";
 
     public static final String ONE = "1";
     public static final String TWO = "2";
@@ -42,11 +40,15 @@ public class OperButtonPanel {
 
     private GridPane gridPane;
 
+    private ExpressionTreeController expressionTreeController;
 
-    public OperButtonPanel(ExpressionRowPanel expressionRowPanel) {
+
+    public OperButtonPanel(ExpressionRowPanel expressionRowPanel, ExpressionTreeController expressionTreeController) {
         expRowTextField = expressionRowPanel.getExpressionRowTextField();
         gridPane = new GridPane();
         configureGridPane();
+
+        this.expressionTreeController = expressionTreeController;
     }
 
     public GridPane getGridPane() {
@@ -65,6 +67,9 @@ public class OperButtonPanel {
         Button divide = new Button(OperatorFactory.DIVIDE);
         Button multiplicate = new Button(OperatorFactory.MULTIPLICATE);
         Button mod = new Button(OperatorFactory.MOD);
+        Button factorial = new Button('n' + OperatorFactory.FACTORIAL);
+        Button lg = new Button(OperatorFactory.LG);
+        Button ln = new Button(OperatorFactory.LN);
 
         reverse.setOnAction(reverseEventHandler);
         sqrt.setOnAction(sqrtEventHandler);
@@ -73,12 +78,15 @@ public class OperButtonPanel {
         divide.setOnAction(divideEventHandler);
         multiplicate.setOnAction(multiplicateEventHandler);
         mod.setOnAction(modEventHandler);
+        factorial.setOnAction(factorialEventHandler);
+        lg.setOnAction(logEventHandler);
+        ln.setOnAction(lnEventHandler);
 
-        Button openBracket = new Button(OPEN_BRACKET);
-        Button closeBracket = new Button(CLOSE_BRACKET);
+        Button openBracket = new Button(Bracket.OPEN);
+        Button closeBracket = new Button(Bracket.CLOSE);
         Button clear = new Button(CLEAR);
         Button backspace = new Button(BACKSPACE);
-        Button dot = new Button(DOT);
+        Button dot = new Button(RPNExpressionConverter.DOT);
         Button equal = new Button(EQUAL);
 
         openBracket.setOnAction(openBracketEventHandler);
@@ -117,12 +125,17 @@ public class OperButtonPanel {
         divide.setStyle(BUTTON_STYLE);
         multiplicate.setStyle(BUTTON_STYLE);
         mod.setStyle(BUTTON_STYLE);
+        factorial.setStyle(BUTTON_STYLE);
+        lg.setStyle(BUTTON_STYLE);
+        ln.setStyle(BUTTON_STYLE);
         openBracket.setStyle(BUTTON_STYLE);
         closeBracket.setStyle(BUTTON_STYLE);
         clear.setStyle(BUTTON_STYLE);
         backspace.setStyle(BUTTON_STYLE);
         dot.setStyle(BUTTON_STYLE);
         equal.setStyle(BUTTON_STYLE);
+        equal.setStyle("-fx-pref-width: 210;" +
+                "-fx-pref-height: 42");
         one.setStyle(BUTTON_STYLE);
         two.setStyle(BUTTON_STYLE);
         three.setStyle(BUTTON_STYLE);
@@ -134,29 +147,43 @@ public class OperButtonPanel {
         nine.setStyle(BUTTON_STYLE);
         zero.setStyle(BUTTON_STYLE);
 
-        gridPane.add(backspace, 0,0);
-        gridPane.add(clear, 1,0);
-        gridPane.add(openBracket, 2,0);
-        gridPane.add(closeBracket, 3,0);
-        gridPane.add(mod, 4,0);
-        gridPane.add(reverse, 3,1);
-        gridPane.add(one, 0,1);
-        gridPane.add(two, 1,1);
-        gridPane.add(three, 2,1);
-        gridPane.add(plus, 4,1);
-        gridPane.add(sqrt, 3,2);
-        gridPane.add(four, 0,2);
-        gridPane.add(five, 1,2);
-        gridPane.add(six, 2,2);
-        gridPane.add(minus, 4,2);
-        gridPane.add(seven, 0,3);
-        gridPane.add(eight, 1,3);
-        gridPane.add(nine, 2,3);
-        gridPane.add(divide, 4,3);
-        gridPane.add(dot, 0,4);
-        gridPane.add(zero, 1,4);
-        gridPane.add(equal, 2,4);
-        gridPane.add(multiplicate, 4,4);
+        CheckBox logOperationActivator = new CheckBox("log()");
+        logOperationActivator.setSelected(true);
+        logOperationActivator.setOnAction(e -> {
+            factorial.setDisable(!logOperationActivator.isSelected());
+            lg.setDisable(!logOperationActivator.isSelected());
+            ln.setDisable(!logOperationActivator.isSelected());
+        });
+
+        gridPane.add(logOperationActivator, 0,0, 2, 1);
+        gridPane.add(backspace, 0,1);
+        gridPane.add(clear, 1,1);
+        gridPane.add(openBracket, 2,1);
+        gridPane.add(closeBracket, 3,1);
+        gridPane.add(mod, 2,5);
+        gridPane.add(sqrt, 4,1);
+        gridPane.add(one, 0,2);
+        gridPane.add(two, 1,2);
+        gridPane.add(three, 2,2);
+        gridPane.add(plus, 3,2);
+        gridPane.add(reverse, 4,2);
+        gridPane.add(four, 0,3);
+        gridPane.add(five, 1,3);
+        gridPane.add(six, 2,3);
+        gridPane.add(minus, 3,3);
+        gridPane.add(factorial, 4,3);
+        gridPane.add(seven, 0,4);
+        gridPane.add(eight, 1,4);
+        gridPane.add(nine, 2,4);
+        gridPane.add(divide, 3,4);
+        gridPane.add(lg, 4,4);
+        gridPane.add(dot, 0,5);
+        gridPane.add(zero, 1,5);
+        gridPane.add(multiplicate, 3,5);
+        gridPane.add(ln, 4,5);
+        gridPane.add(equal, 0,6, 5, 1);
+
+        GridPane.setMargin(logOperationActivator, new Insets(15));
     }
 
     /*
@@ -204,11 +231,11 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> openBracketEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + OPEN_BRACKET);
+        expRowTextField.setText(expRowTextField.getText() + Bracket.OPEN);
     };
 
     private EventHandler<ActionEvent> closeBracketEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + CLOSE_BRACKET);
+        expRowTextField.setText(expRowTextField.getText() + Bracket.CLOSE);
     };
 
     private EventHandler<ActionEvent> clearEventHandler = e -> {
@@ -216,23 +243,17 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> backspaceEventHandler = e -> {
-        try {
+        if (!expRowTextField.getText().equals("")) {
             expRowTextField.setText(expRowTextField.getText().substring(0, expRowTextField.getText().length() - 1));
-        } catch (StringIndexOutOfBoundsException ex) {
-            return;
         }
     };
 
     private EventHandler<ActionEvent> dotEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + DOT);
+        expRowTextField.setText(expRowTextField.getText() + RPNExpressionConverter.DOT);
     };
 
     private EventHandler<ActionEvent> equalEventHandler = e -> {
-        try {
-            RPNExpressionConverter.convert(expRowTextField.getText());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        expressionTreeController.createTree(expRowTextField.getText());
     };
 
     private EventHandler<ActionEvent> reverseEventHandler = e -> {
@@ -261,5 +282,17 @@ public class OperButtonPanel {
 
     private EventHandler<ActionEvent> modEventHandler = e -> {
         expRowTextField.setText(expRowTextField.getText() + OperatorFactory.MOD);
+    };
+
+    private EventHandler<ActionEvent> factorialEventHandler = e -> {
+        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.FACTORIAL);
+    };
+
+    private EventHandler<ActionEvent> logEventHandler = e -> {
+        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LG + Bracket.OPEN);
+    };
+
+    private EventHandler<ActionEvent> lnEventHandler = e -> {
+        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LN + Bracket.OPEN);
     };
 }

@@ -1,5 +1,6 @@
 package view;
 
+import controller.ExpressionTreeController;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 
@@ -12,10 +13,10 @@ public class CalculatorForm {
     private GridPane gridPane;
 
 
-    public CalculatorForm() {
+    public CalculatorForm(ExpressionTreeController expressionTreeController) {
         expressionTreePanel = new ExpressionTreePanel();
         expressionRowPanel = new ExpressionRowPanel();
-        operButtonPanel = new OperButtonPanel(expressionRowPanel);
+        operButtonPanel = new OperButtonPanel(expressionRowPanel, expressionTreeController);
 
         gridPane = new GridPane();
         configureGridPane();

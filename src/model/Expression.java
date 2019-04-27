@@ -12,6 +12,10 @@ public class Expression {
         tokens = new ArrayList<>();
     }
 
+    public List<Token> tokens() {
+        return tokens;
+    }
+
     public void addToken(Token token) {
         tokens.add(token);
     }

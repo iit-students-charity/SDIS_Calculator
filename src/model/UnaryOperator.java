@@ -20,7 +20,7 @@ public class UnaryOperator extends Token implements Operator {
             case OperatorFactory.SQRT: {
                 return Math.sqrt(operand.value());
             }
-            case OperatorFactory.LOG: {
+            case OperatorFactory.LG: {
                 return Math.log10(operand.value());
             }
             case OperatorFactory.LN: {
