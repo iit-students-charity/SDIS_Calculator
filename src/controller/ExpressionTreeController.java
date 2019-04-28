@@ -12,31 +12,48 @@ public class ExpressionTreeController {
         this.expressionTree = expressionTree;
     }
 
+    public ExpressionTree getExpressionTree() {
+        return expressionTree;
+    }
+
+    public Expression getExpressionRPN() {
+        return expressionRPN;
+    }
+
     public void createTree(String expression) {
         try {
             expressionRPN = RPNExpressionConverter.convert(expression);
         } catch (Exception ex) {
-            System.out.println("Cannot parse expression due to next errors: " + ex.getCause().getMessage());
+            System.out.println("Cannot parse expression due to next errors: " + ex.getMessage());
             return;
         }
 
         expressionTree = new ExpressionTree(expressionRPN);
-        System.out.println(expressionTree.toInfix());
     }
 
-    public double valueOf(Token token) throws Exception {
-        if (token instanceof Operator) {
-            return ((Operator) token).result();
-        }
+    public void replace(ExpressionTreeNode node, ExpressionTreeNode what, ExpressionTreeNode with) {
+        if (node.equals(what)) {
+            node = with;
+        } else {
+            if (node.getLeftOperand() != null) {
+                replace(node.getLeftOperand(), what, with);
+            }
 
-        if (token instanceof Operand) {
-            return ((Operand) token).value();
+            if (node.getRightOperand() != null) {
+                replace(node.getRightOperand(), what, with);
+            }
         }
-
-        throw new Exception("Token is not an operator or operand");
     }
 
-    public String sourceOf(Token token) {
-        return token.source();
+    public ExpressionTreeNode getRoot() {
+        return expressionTree.getRoot();
+    }
+
+    public Operand result() {
+        return expressionTree.getRoot().value();
+    }
+
+    public Expression infix() {
+        return expressionTree.toInfix();
     }
 }

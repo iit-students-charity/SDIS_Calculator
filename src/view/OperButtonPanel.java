@@ -37,14 +37,17 @@ public class OperButtonPanel {
 
 
     private TextField expRowTextField;
+    private ExpressionTreePanel expressionTreePanel;
 
     private GridPane gridPane;
 
     private ExpressionTreeController expressionTreeController;
 
 
-    public OperButtonPanel(ExpressionRowPanel expressionRowPanel, ExpressionTreeController expressionTreeController) {
+    public OperButtonPanel(ExpressionRowPanel expressionRowPanel, ExpressionTreePanel expressionTreePanel,
+                           ExpressionTreeController expressionTreeController) {
         expRowTextField = expressionRowPanel.getExpressionRowTextField();
+        this.expressionTreePanel = expressionTreePanel;
         gridPane = new GridPane();
         configureGridPane();
 
@@ -254,6 +257,7 @@ public class OperButtonPanel {
 
     private EventHandler<ActionEvent> equalEventHandler = e -> {
         expressionTreeController.createTree(expRowTextField.getText());
+        expressionTreePanel.construct();
     };
 
     private EventHandler<ActionEvent> reverseEventHandler = e -> {

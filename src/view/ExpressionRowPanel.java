@@ -32,6 +32,7 @@ public class ExpressionRowPanel {
 
     private void configureExpressionRowTextField() {
         expressionRowTextField.setEditable(false);
+        expressionRowTextField.setFocusTraversable(false);
         expressionRowTextField.setFont(new Font("Segoe UI", 18));
         expressionRowTextField.setPrefHeight(50);
         expressionRowTextField.setPrefWidth(1000);

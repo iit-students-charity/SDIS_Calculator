@@ -15,16 +15,16 @@ public class UnaryOperator extends Token implements Operator {
     }
 
     @Override
-    public double result() {
+    public Operand result() {
         switch (source) {
             case OperatorFactory.SQRT: {
-                return Math.sqrt(operand.value());
+                return new Operand(Math.sqrt(operand.value()));
             }
             case OperatorFactory.LG: {
-                return Math.log10(operand.value());
+                return new Operand(Math.log10(operand.value()));
             }
             case OperatorFactory.LN: {
-                return Math.log(operand.value());
+                return new Operand(Math.log(operand.value()));
             }
             case OperatorFactory.FACTORIAL: {
                 int factorial = 1;
@@ -33,11 +33,11 @@ public class UnaryOperator extends Token implements Operator {
                     factorial *= positiveInt;
                 }
 
-                return factorial;
+                return new Operand(factorial);
             }
         }
 
-        return 0;
+        return null;
     }
 
     public void setOperand(Operand operand) {

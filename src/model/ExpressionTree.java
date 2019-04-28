@@ -20,10 +20,13 @@ public class ExpressionTree {
         return root;
     }
 
+    public void setRoot(ExpressionTreeNode root) {
+        this.root = root;
+    }
 
     public Expression toInfix() {
         Expression infix = new Expression();
-        traverse(root, infix);
+        traverseInfix(root, infix);
 
         List<Token> toRemove = new ArrayList<>();
 
@@ -44,22 +47,22 @@ public class ExpressionTree {
      *      Util
      */
 
-    private void traverse(ExpressionTreeNode root, Expression expression) {
+    private void traverseInfix(ExpressionTreeNode root, Expression expression) {
         expression.addToken(new Bracket(Bracket.OPEN));
 
         if (root.getLeftOperand() != null) {
-            traverse(root.getLeftOperand(), expression);
+            traverseInfix(root.getLeftOperand(), expression);
         }
 
 
         if (root.getOperator() == null) {
-            expression.addToken(root.getValue());
+            expression.addToken(root.value());
         } else {
             expression.addToken((Token) root.getOperator());
         }
 
         if (root.getRightOperand() != null) {
-            traverse(root.getRightOperand(), expression);
+            traverseInfix(root.getRightOperand(), expression);
         }
 
         expression.addToken(new Bracket(Bracket.CLOSE));
@@ -86,9 +89,8 @@ public class ExpressionTree {
                     rightOperand = null;
                 }
 
-                anyRoot.setLeftOperand(rightOperand);
-                anyRoot.setRightOperand(leftOperand); // lol it works correct instead of left-to-left and right-to-right
-                // mb because of deque but i think it isn't
+                anyRoot.setLeftOperand(leftOperand);
+                anyRoot.setRightOperand(rightOperand);
 
                 tokenDeque.push(anyRoot);
             }

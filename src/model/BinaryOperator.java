@@ -17,26 +17,26 @@ public class BinaryOperator extends Token implements Operator {
     }
 
     @Override
-    public double result() {
+    public Operand result() {
         switch (source) {
             case OperatorFactory.PLUS: {
-                return leftOperand.value() + rightOperand.value();
+                return new Operand(leftOperand.value() + rightOperand.value());
             }
             case OperatorFactory.MINUS: {
-                return leftOperand.value() - rightOperand.value();
+                return new Operand(leftOperand.value() - rightOperand.value());
             }
             case OperatorFactory.DIVIDE: {
-                return leftOperand.value() / rightOperand.value();
+                return new Operand(leftOperand.value() / rightOperand.value());
             }
             case OperatorFactory.MULTIPLICATE: {
-                return leftOperand.value() * rightOperand.value();
+                return new Operand(leftOperand.value() * rightOperand.value());
             }
             case OperatorFactory.MOD: {
-                return leftOperand.value() % rightOperand.value();
+                return new Operand(leftOperand.value() % rightOperand.value());
             }
         }
 
-        return 0;
+        return new Operand(0);
     }
 
     public void setLeftOperand(Operand operand) {

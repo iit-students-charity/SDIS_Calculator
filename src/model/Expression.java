@@ -29,7 +29,7 @@ public class Expression {
         String toString = "";
 
         for (Token token : tokens) {
-            toString = toString.concat(token.toString() + ' ');
+            toString = toString.concat(token.toString());
         }
 
         return toString;

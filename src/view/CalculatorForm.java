@@ -14,9 +14,9 @@ public class CalculatorForm {
 
 
     public CalculatorForm(ExpressionTreeController expressionTreeController) {
-        expressionTreePanel = new ExpressionTreePanel();
         expressionRowPanel = new ExpressionRowPanel();
-        operButtonPanel = new OperButtonPanel(expressionRowPanel, expressionTreeController);
+        expressionTreePanel = new ExpressionTreePanel(expressionRowPanel, expressionTreeController);
+        operButtonPanel = new OperButtonPanel(expressionRowPanel, expressionTreePanel, expressionTreeController);
 
         gridPane = new GridPane();
         configureGridPane();
@@ -33,7 +33,7 @@ public class CalculatorForm {
     private void configureGridPane() {
         gridPane.setAlignment(Pos.CENTER);
 
-        gridPane.add(expressionTreePanel.getExpressionTree(), 0, 0, 1, 2);
+        gridPane.add(expressionTreePanel.getGridPane(), 0, 0, 1, 2);
         gridPane.add(expressionRowPanel.getExpRowScrollPane(), 1, 0);
         gridPane.add(operButtonPanel.getGridPane(), 1, 1);
     }

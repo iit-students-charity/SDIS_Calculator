@@ -105,7 +105,7 @@ public class RPNExpressionConverter {
 
                     do {
                         if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
-                            throw new Exception("Error: bracket at begin is not closed");
+                            throw new Exception("Bracket at begin is not closed");
                         } else if (operatorStack.peek().equals(Bracket.OPEN)) {
                             operatorStack.pop();
 
@@ -137,7 +137,7 @@ public class RPNExpressionConverter {
                         if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
                             break;
                         } else if (operatorStack.peek().equals(Bracket.OPEN)) {
-                            throw new Exception("Error: open bracket in the end of the expression");
+                            throw new Exception("Open bracket in the end of the expression");
                         }
 
                         if (!operatorStack.isEmpty()) {
@@ -177,7 +177,7 @@ public class RPNExpressionConverter {
             }
         }
 
-        System.out.println("RPN " + expressionRPN);
+        //System.out.println("RPN " + expressionRPN);
         return expressionRPN;
     }
 
