@@ -50,29 +50,28 @@ public class ExpressionTree {
     private void traverseInfix(ExpressionTreeNode root, Expression expression) {
         expression.addToken(new Bracket(Bracket.OPEN));
 
-        if (root.getLeftOperand() != null) {
-            traverseInfix(root.getLeftOperand(), expression);
+        if (root.getRightOperand() != null) {
+            traverseInfix(root.getRightOperand(), expression);
         }
 
-
         if (root.getOperator() == null) {
-            expression.addToken(root.value());
+            expression.addToken(root.getValue());
         } else {
             expression.addToken((Token) root.getOperator());
         }
 
-        if (root.getRightOperand() != null) {
-            traverseInfix(root.getRightOperand(), expression);
+        if (root.getLeftOperand() != null) {
+            traverseInfix(root.getLeftOperand(), expression);
         }
 
         expression.addToken(new Bracket(Bracket.CLOSE));
     }
 
-    private ExpressionTreeNode construct(Expression expression) {
+    private ExpressionTreeNode construct(Expression rpn) {
         Deque<ExpressionTreeNode> tokenDeque = new ArrayDeque<>();
         ExpressionTreeNode anyRoot, leftOperand, rightOperand;
 
-        for (Token token : expression.tokens()) {
+        for (Token token : rpn.tokens()) {
             if (token instanceof Operand) {
                 anyRoot = new ExpressionTreeNode((Operand) token);
                 tokenDeque.push(anyRoot);

@@ -12,14 +12,6 @@ public class ExpressionTreeController {
         this.expressionTree = expressionTree;
     }
 
-    public ExpressionTree getExpressionTree() {
-        return expressionTree;
-    }
-
-    public Expression getExpressionRPN() {
-        return expressionRPN;
-    }
-
     public void createTree(String expression) {
         try {
             expressionRPN = RPNExpressionConverter.convert(expression);
@@ -50,7 +42,7 @@ public class ExpressionTreeController {
     }
 
     public Operand result() {
-        return expressionTree.getRoot().value();
+        return expressionTree.getRoot().getValue();
     }
 
     public Expression infix() {

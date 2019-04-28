@@ -25,31 +25,22 @@ public class ExpressionTreeNode {
         state = State.VALUE;
     }
 
-    public ExpressionTreeNode() {
-        operator = null;
-        leftOperand = null;
-        rightOperand = null;
-        value = null;
-
-        state = null;
-    }
-
     public Operator getOperator() {
         return operator;
     }
 
-    public Operand value() {
+    public Operand getValue() {
         if (value != null) {
             return value;
         } else {
             if (operator instanceof BinaryOperator) {
-                ((BinaryOperator) operator).setLeftOperand(leftOperand.value());
-                ((BinaryOperator) operator).setRightOperand(rightOperand.value());
+                ((BinaryOperator) operator).setLeftOperand(leftOperand.getValue());
+                ((BinaryOperator) operator).setRightOperand(rightOperand.getValue());
                 value = operator.result();
             }
 
             if (operator instanceof UnaryOperator) {
-                ((UnaryOperator) operator).setOperand(leftOperand.value());
+                ((UnaryOperator) operator).setOperand(leftOperand.getValue());
                 value = operator.result();
             }
         }
@@ -97,7 +88,7 @@ public class ExpressionTreeNode {
                     return ((Token) operator).source();
                 }
                 case VALUE: {
-                    return value().source();
+                    return getValue().source();
                 }
             }
         }

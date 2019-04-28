@@ -10,29 +10,24 @@ public class BinaryOperator extends Token implements Operator {
         this.source = source;
     }
 
-    public BinaryOperator(String source, Operand leftOperand, Operand rightOperand) {
-        this(source);
-        this.leftOperand = leftOperand;
-        this.rightOperand = rightOperand;
-    }
-
     @Override
     public Operand result() {
         switch (source) {
+            // не баг, а фича
             case OperatorFactory.PLUS: {
-                return new Operand(leftOperand.value() + rightOperand.value());
+                return new Operand(rightOperand.value() + leftOperand.value());
             }
             case OperatorFactory.MINUS: {
-                return new Operand(leftOperand.value() - rightOperand.value());
+                return new Operand(rightOperand.value() - leftOperand.value());
             }
             case OperatorFactory.DIVIDE: {
-                return new Operand(leftOperand.value() / rightOperand.value());
+                return new Operand(rightOperand.value() / leftOperand.value());
             }
             case OperatorFactory.MULTIPLICATE: {
-                return new Operand(leftOperand.value() * rightOperand.value());
+                return new Operand(rightOperand.value() * leftOperand.value());
             }
             case OperatorFactory.MOD: {
-                return new Operand(leftOperand.value() % rightOperand.value());
+                return new Operand(rightOperand.value() % leftOperand.value());
             }
         }
 

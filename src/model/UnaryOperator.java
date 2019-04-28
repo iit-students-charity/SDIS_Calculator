@@ -9,11 +9,6 @@ public class UnaryOperator extends Token implements Operator {
         super.source = source;
     }
 
-    public UnaryOperator(String source, Operand operand) {
-        this(source);
-        this.operand = operand;
-    }
-
     @Override
     public Operand result() {
         switch (source) {

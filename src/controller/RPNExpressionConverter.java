@@ -177,7 +177,7 @@ public class RPNExpressionConverter {
             }
         }
 
-        //System.out.println("RPN " + expressionRPN);
+        System.out.println("RPN " + expressionRPN);
         return expressionRPN;
     }
 

@@ -64,43 +64,49 @@ public class ExpressionTreePanel {
 
         recursiveInitialize(expressionTreeController.getRoot(), expressionTreeView.getRoot());
 
-        expressionTreeView.setOnMouseClicked(e -> {
-
-        });
-
-        expressionTreeView.getRoot().setExpanded(true);
         result.setText(expressionTreeController.result().source());
-        expressionRowPanel.getExpressionRowTextField().setText(
-                expressionTreeController.getExpressionTree().toInfix().toString()
-        );
     }
 
     private void recursiveInitialize(ExpressionTreeNode expressionTreeNode, TreeItem<ExpressionTreeNode> treeItem) {
         treeItem.expandedProperty().addListener(e -> {
-            ExpressionTreeNode replacing = new ExpressionTreeNode(new Operand(treeItem.getValue().value().value()));
+            ExpressionTreeNode replacing;
 
             if (treeItem.isExpanded()) {
                 treeItem.getValue().setState(ExpressionTreeNode.State.OPERATOR);
+
+                if (treeItem.getValue().getOperator() != null) {
+                    replacing = new ExpressionTreeNode((Operator) OperatorFactory.getOperator((
+                            (Token) treeItem.getValue().getOperator()).source()
+                    ));
+                } else {
+                    replacing = treeItem.getValue();
+                }
             } else {
                 treeItem.getValue().setState(ExpressionTreeNode.State.VALUE);
-                expressionTreeController.replace(expressionTreeController.getRoot(), treeItem.getValue(), replacing);
+                replacing = new ExpressionTreeNode(new Operand(treeItem.getValue().getValue().value()));
             }
+
+            expressionTreeController.replace(expressionTreeController.getRoot(), treeItem.getValue(), replacing);
+            expressionRowPanel.getExpressionRowTextField().setText(
+                    expressionTreeController.infix().toString()
+            );
         });
 
         treeItem.setExpanded(true);
+
+        // не баг, а фича
+        if (expressionTreeNode.getRightOperand() != null) {
+            TreeItem<ExpressionTreeNode> right = new TreeItem<>(expressionTreeNode.getRightOperand());
+
+            treeItem.getChildren().add(right);
+            recursiveInitialize(expressionTreeNode.getRightOperand(), right);
+        }
 
         if (expressionTreeNode.getLeftOperand() != null) {
             TreeItem<ExpressionTreeNode> left = new TreeItem<>(expressionTreeNode.getLeftOperand());
 
             treeItem.getChildren().add(left);
             recursiveInitialize(expressionTreeNode.getLeftOperand(), left);
-        }
-
-        if (expressionTreeNode.getRightOperand() != null) {
-            TreeItem<ExpressionTreeNode> right = new TreeItem<>(expressionTreeNode.getRightOperand());
-
-            treeItem.getChildren().add(right);
-            recursiveInitialize(expressionTreeNode.getRightOperand(), right);
         }
     }
 }
