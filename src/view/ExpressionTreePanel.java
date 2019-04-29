@@ -63,36 +63,21 @@ public class ExpressionTreePanel {
         expressionTreeView.setRoot(new TreeItem<>(expressionTreeController.getRoot()));
 
         recursiveInitialize(expressionTreeController.getRoot(), expressionTreeView.getRoot());
+        traverseExpand(expressionTreeView.getRoot());
 
         result.setText(expressionTreeController.result().source());
     }
 
     private void recursiveInitialize(ExpressionTreeNode expressionTreeNode, TreeItem<ExpressionTreeNode> treeItem) {
         treeItem.expandedProperty().addListener(e -> {
-            ExpressionTreeNode replacing;
+            treeItem.getValue().setState(treeItem.isExpanded() ?
+                    ExpressionTreeNode.State.OPERATOR :
+                    ExpressionTreeNode.State.VALUE);
 
-            if (treeItem.isExpanded()) {
-                treeItem.getValue().setState(ExpressionTreeNode.State.OPERATOR);
-
-                if (treeItem.getValue().getOperator() != null) {
-                    replacing = new ExpressionTreeNode((Operator) OperatorFactory.getOperator((
-                            (Token) treeItem.getValue().getOperator()).source()
-                    ));
-                } else {
-                    replacing = treeItem.getValue();
-                }
-            } else {
-                treeItem.getValue().setState(ExpressionTreeNode.State.VALUE);
-                replacing = new ExpressionTreeNode(new Operand(treeItem.getValue().getValue().value()));
-            }
-
-            expressionTreeController.replace(expressionTreeController.getRoot(), treeItem.getValue(), replacing);
             expressionRowPanel.getExpressionRowTextField().setText(
                     expressionTreeController.infix().toString()
             );
         });
-
-        treeItem.setExpanded(true);
 
         // не баг, а фича
         if (expressionTreeNode.getRightOperand() != null) {
@@ -107,6 +92,13 @@ public class ExpressionTreePanel {
 
             treeItem.getChildren().add(left);
             recursiveInitialize(expressionTreeNode.getLeftOperand(), left);
+        }
+    }
+
+    private void traverseExpand(TreeItem<ExpressionTreeNode> root) {
+        for (TreeItem<ExpressionTreeNode> child : root.getChildren()) {
+            traverseExpand(child);
+            root.setExpanded(true);
         }
     }
 }

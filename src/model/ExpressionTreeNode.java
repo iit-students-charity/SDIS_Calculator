@@ -74,6 +74,10 @@ public class ExpressionTreeNode {
         return rightOperand;
     }
 
+    public State getState() {
+        return state;
+    }
+
     public void setState(State state) {
         this.state = state;
     }

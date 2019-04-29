@@ -1,6 +1,8 @@
 package model;
 
 
+import javafx.scene.control.TreeItem;
+
 import java.util.*;
 
 
@@ -39,7 +41,11 @@ public class ExpressionTree {
             }
         }
 
+        toRemove.add(infix.tokens().get(0));
+        toRemove.add(infix.tokens().get(infix.tokens().size() - 1));
+
         infix.tokens().removeAll(toRemove);
+
         return infix;
     }
 
@@ -50,18 +56,20 @@ public class ExpressionTree {
     private void traverseInfix(ExpressionTreeNode root, Expression expression) {
         expression.addToken(new Bracket(Bracket.OPEN));
 
-        if (root.getRightOperand() != null) {
-            traverseInfix(root.getRightOperand(), expression);
-        }
-
-        if (root.getOperator() == null) {
+        if (root.getState().equals(ExpressionTreeNode.State.VALUE)) {
             expression.addToken(root.getValue());
-        } else {
-            expression.addToken((Token) root.getOperator());
         }
 
-        if (root.getLeftOperand() != null) {
-            traverseInfix(root.getLeftOperand(), expression);
+        if (root.getState().equals(ExpressionTreeNode.State.OPERATOR)) {
+            if (root.getRightOperand() != null) {
+                traverseInfix(root.getRightOperand(), expression);
+            }
+
+            expression.addToken((Token) root.getOperator());
+
+            if (root.getLeftOperand() != null) {
+                traverseInfix(root.getLeftOperand(), expression);
+            }
         }
 
         expression.addToken(new Bracket(Bracket.CLOSE));

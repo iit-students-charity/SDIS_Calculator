@@ -24,9 +24,14 @@ public class Expression {
     public String toString() {
         String toString = "";
 
-        for (Token token : tokens) {
-            toString = toString.concat(token.toString());
+        try {
+            for (Token token : tokens) {
+                toString = toString.concat(token.toString());
+            }
+        } catch (NullPointerException ex) {
+            //System.out.println("EXCEPTION");
         }
+
 
         return toString;
     }
