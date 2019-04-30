@@ -12,28 +12,17 @@ public class ExpressionTreeController {
         this.expressionTree = expressionTree;
     }
 
-    public void createTree(String expression) {
+    public void createTree(String expression) throws Exception {
         try {
-            expressionRPN = RPNExpressionConverter.convert(expression);
+            expressionRPN = new RPNExpressionConverter(expression).convert();
         } catch (Exception ex) {
-            System.out.println("Cannot parse expression due to next errors: " + ex.getMessage());
-            return;
+            throw  new Exception("Cannot parse expression due to next errors: " + ex.getMessage());
         }
 
-        expressionTree = new ExpressionTree(expressionRPN);
-    }
-
-    public void replace(ExpressionTreeNode node, ExpressionTreeNode what, ExpressionTreeNode with) {
-        if (node.equals(what)) {
-            node = with;
-        } else {
-            if (node.getLeftOperand() != null) {
-                replace(node.getLeftOperand(), what, with);
-            }
-
-            if (node.getRightOperand() != null) {
-                replace(node.getRightOperand(), what, with);
-            }
+        try {
+            expressionTree = new ExpressionTree(expressionRPN);
+        } catch (Exception ex) {
+            throw  new Exception("Cannot parse expression due to next errors: " + ex.getMessage());
         }
     }
 

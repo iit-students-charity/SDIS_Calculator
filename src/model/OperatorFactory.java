@@ -1,6 +1,8 @@
 package model;
 
-
+//Factory method
+//AbstractFactory
+//State
 public class OperatorFactory {
     public static final String SQRT = "√";
     public static final String PLUS = "+";
@@ -13,7 +15,7 @@ public class OperatorFactory {
     public static final String FACTORIAL = "!";
 
 
-    public static Token getOperator(String operator) {
+    public static Operator getOperator(String operator) throws Exception {
         switch (operator) {
             case SQRT: {
                 return new UnaryOperator(SQRT);
@@ -44,6 +46,6 @@ public class OperatorFactory {
             }
         }
 
-        return null;
+        throw new Exception("The token given is not an operator");
     }
 }

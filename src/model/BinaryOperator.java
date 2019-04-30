@@ -1,19 +1,19 @@
 package model;
 
 
-public class BinaryOperator extends Token implements Operator {
+public class BinaryOperator implements Operator, Sourcable {
     private Operand leftOperand;
     private Operand rightOperand;
+    private Token token;
 
 
     public BinaryOperator(String source) {
-        this.source = source;
+        token = new Token(source);
     }
 
     @Override
     public Operand result() {
-        switch (source) {
-            // не баг, а фича
+        switch (token.source()) {
             case OperatorFactory.PLUS: {
                 return new Operand(rightOperand.value() + leftOperand.value());
             }
@@ -40,5 +40,14 @@ public class BinaryOperator extends Token implements Operator {
 
     public void setRightOperand(Operand operand) {
         rightOperand = operand;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    @Override
+    public String getSource() {
+        return token.source();
     }
 }

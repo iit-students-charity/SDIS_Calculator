@@ -23,15 +23,9 @@ public class Expression {
     @Override
     public String toString() {
         String toString = "";
-
-        try {
-            for (Token token : tokens) {
-                toString = toString.concat(token.toString());
-            }
-        } catch (NullPointerException ex) {
-            //System.out.println("EXCEPTION");
+        for (Token token : tokens) {
+            toString = toString.concat(token.toString());
         }
-
 
         return toString;
     }

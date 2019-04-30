@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import model.Bracket;
 import model.OperatorFactory;
 
 
@@ -18,6 +17,8 @@ public class OperButtonPanel {
     public static final String BACKSPACE = "←";
     public static final String EQUAL = "=";
     public static final String REVERSE = "1/x";
+    public static final String OPEN = "(";
+    public static final String CLOSE = ")";
 
     public static final String ONE = "1";
     public static final String TWO = "2";
@@ -85,8 +86,8 @@ public class OperButtonPanel {
         lg.setOnAction(logEventHandler);
         ln.setOnAction(lnEventHandler);
 
-        Button openBracket = new Button(Bracket.OPEN);
-        Button closeBracket = new Button(Bracket.CLOSE);
+        Button openBracket = new Button(OPEN);
+        Button closeBracket = new Button(CLOSE);
         Button clear = new Button(CLEAR);
         Button backspace = new Button(BACKSPACE);
         Button dot = new Button(RPNExpressionConverter.DOT);
@@ -234,11 +235,11 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> openBracketEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + Bracket.OPEN);
+        expRowTextField.setText(expRowTextField.getText() + OPEN);
     };
 
     private EventHandler<ActionEvent> closeBracketEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + Bracket.CLOSE);
+        expRowTextField.setText(expRowTextField.getText() + CLOSE);
     };
 
     private EventHandler<ActionEvent> clearEventHandler = e -> {
@@ -256,7 +257,13 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> equalEventHandler = e -> {
-        expressionTreeController.createTree(expRowTextField.getText());
+        try {
+            expressionTreeController.createTree(expRowTextField.getText());
+        } catch (Exception ex) {
+            expRowTextField.setText(ex.getMessage());
+            return;
+        }
+
         expressionTreePanel.construct();
     };
 
@@ -293,10 +300,10 @@ public class OperButtonPanel {
     };
 
     private EventHandler<ActionEvent> logEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LG + Bracket.OPEN);
+        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LG + OPEN);
     };
 
     private EventHandler<ActionEvent> lnEventHandler = e -> {
-        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LN + Bracket.OPEN);
+        expRowTextField.setText(expRowTextField.getText() + OperatorFactory.LN + OPEN);
     };
 }

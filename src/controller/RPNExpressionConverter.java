@@ -1,48 +1,64 @@
 package controller;
 
 import model.*;
+import view.OperButtonPanel;
+
 import java.util.*;
 
 public class RPNExpressionConverter {
     public static final String DOT = ".";
     private static final String EXPRESSION_BORDER = "$";
 
+    private String source;
+    private Expression rpn;
 
-    public static Expression convert(String expression) throws Exception {
-        Expression expressionRPN = new Expression();
-        Deque<String> operatorStack = new ArrayDeque<>();
+    private Deque<String> operatorStack;
+
+
+    public RPNExpressionConverter(String source) {
+        this.source = source;
+        rpn = new Expression();
+
+        operatorStack = new ArrayDeque<>();
+    }
+
+    public Expression convert() throws Exception {
         operatorStack.push(EXPRESSION_BORDER);
-        expression = expression.concat(EXPRESSION_BORDER);
+        source = source.concat(EXPRESSION_BORDER);
         String currentOperand = "";
         String currentOperationSymbol;
 
-        for (int expIndex = 0; expIndex < expression.length(); expIndex++) {
-            if (isOperand(expression.substring(expIndex, expIndex + 1))) {
-                currentOperand = currentOperand.concat(expression.substring(expIndex, expIndex + 1));
+        for (int expIndex = 0; expIndex < source.length(); expIndex++) {
+            if (isOperand(source.substring(expIndex, expIndex + 1))) {
+                currentOperand = currentOperand.concat(source.substring(expIndex, expIndex + 1));
             } else {
                 if (!currentOperand.equals("")) {
-                    expressionRPN.addToken(new Operand(currentOperand));
+                    rpn.addToken(new Operand(currentOperand).token());
                     currentOperand = "";
                 }
 
-                currentOperationSymbol = expression.substring(expIndex, expIndex + 1);
+                currentOperationSymbol = source.substring(expIndex, expIndex + 1);
 
                 // if factorial found
-                if (expression.substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length())
+                if (source.substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length())
                         .equals(OperatorFactory.FACTORIAL)) {
 
-                    expressionRPN.addToken(OperatorFactory.getOperator(expression
-                            .substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length()))); // why so hard? just OF.FACTORIAL mb?
+                    try {
+                        addOperatorToRPN(source
+                                .substring(expIndex, expIndex + OperatorFactory.FACTORIAL.length()));
+                    } catch (Exception ex) {
+                        throw new Exception(ex.getMessage());
+                    }
 
                     continue;
                 }
 
                 // if open bracket found
-                if (expression.substring(expIndex, expIndex + Bracket.OPEN.length())
-                        .equals(Bracket.OPEN)) {
+                if (source.substring(expIndex, expIndex + OperButtonPanel.OPEN.length())
+                        .equals(OperButtonPanel.OPEN)) {
 
-                    operatorStack.push(Bracket.OPEN);
-                    expIndex += Bracket.OPEN.length() - 1;
+                    expIndex = addOpenBracket(expIndex);
+
                     continue;
                 }
 
@@ -50,24 +66,7 @@ public class RPNExpressionConverter {
                 if (currentOperationSymbol.equals(OperatorFactory.MINUS)
                         || currentOperationSymbol.equals(OperatorFactory.PLUS)) {
 
-                    if (expIndex == 0 || expression.substring(expIndex - 1, expIndex).equals(Bracket.OPEN)) {
-                        operatorStack.push(expression.substring(expIndex, expIndex + 1));
-                    } else {
-                        do {
-                            if (operatorStack.peek().equals(EXPRESSION_BORDER)
-                                    || operatorStack.peek().equals(Bracket.OPEN)) {
-
-                                operatorStack.push(currentOperationSymbol);
-
-                                break;
-                            } else {
-                                if (!operatorStack.isEmpty()) {
-                                    expressionRPN.addToken(OperatorFactory.getOperator(operatorStack.pop()));
-                                }
-                            }
-
-                        } while (true);
-                    }
+                    expIndex = addPlusMinusOperator(expIndex);
 
                     continue;
                 }
@@ -80,76 +79,31 @@ public class RPNExpressionConverter {
                         || currentOperationSymbol
                         .equals(OperatorFactory.MOD)) {
 
-                    do {
-                        if (operatorStack.peek().equals(OperatorFactory.MULTIPLICATE) ||
-                                operatorStack.peek().equals(OperatorFactory.DIVIDE) ||
-                                operatorStack.peek().equals(OperatorFactory.SQRT) ||
-                                operatorStack.peek().equals(OperatorFactory.MOD)) {
-
-                            if (!operatorStack.isEmpty()) {
-                                expressionRPN.addToken(OperatorFactory.getOperator(operatorStack.pop()));
-                            }
-                        } else {
-                            operatorStack.push(currentOperationSymbol);
-                            break;
-                        }
-
-                    } while (true);
+                    addMultDivModOperator(expIndex);
 
                     continue;
                 }
 
                 // if close bracket found
-                if (expression.substring(expIndex, expIndex + Bracket.CLOSE.length())
-                        .equals(Bracket.CLOSE)) {
+                if (source.substring(expIndex, expIndex + OperButtonPanel.CLOSE.length())
+                        .equals(OperButtonPanel.CLOSE)) {
 
-                    do {
-                        if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
-                            throw new Exception("Bracket at begin is not closed");
-                        } else if (operatorStack.peek().equals(Bracket.OPEN)) {
-                            operatorStack.pop();
-
-                            if (operatorStack.peek().equals(OperatorFactory.LG) || operatorStack.peek().equals(OperatorFactory.LN) ||
-                                    operatorStack.peek().equals("+/-")) {
-
-                                if (!operatorStack.isEmpty()) {
-                                    expressionRPN.addToken(OperatorFactory.getOperator(operatorStack.pop()));
-                                }
-                            }
-
-                            break;
-                        }
-
-                        if (!operatorStack.isEmpty()) {
-                            expressionRPN.addToken(OperatorFactory.getOperator(operatorStack.pop()));
-                        }
-
-                    } while (true);
+                    addCloseBracket();
 
                     continue;
                 }
 
                 // if expression border found
-                if (expression.substring(expIndex, expIndex + EXPRESSION_BORDER.length())
+                if (source.substring(expIndex, expIndex + EXPRESSION_BORDER.length())
                         .equals(EXPRESSION_BORDER)) {
 
-                    do {
-                        if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
-                            break;
-                        } else if (operatorStack.peek().equals(Bracket.OPEN)) {
-                            throw new Exception("Open bracket in the end of the expression");
-                        }
-
-                        if (!operatorStack.isEmpty()) {
-                            expressionRPN.addToken(OperatorFactory.getOperator(operatorStack.pop()));
-                        }
-                    } while (true);
+                    endParse();
 
                     continue;
                 }
 
                 // if ln() found
-                if (expression.substring(expIndex, expIndex + OperatorFactory.LN.length())
+                if (source.substring(expIndex, expIndex + OperatorFactory.LN.length())
                         .equals(OperatorFactory.LN)) {
 
                     operatorStack.push(OperatorFactory.LN);
@@ -158,7 +112,7 @@ public class RPNExpressionConverter {
                 }
 
                 // if lg() found
-                if (expression.substring(expIndex, expIndex + OperatorFactory.LG.length())
+                if (source.substring(expIndex, expIndex + OperatorFactory.LG.length())
                         .equals(OperatorFactory.LG)) {
 
                     operatorStack.push(OperatorFactory.LG);
@@ -167,7 +121,7 @@ public class RPNExpressionConverter {
                 }
 
                 // if sqrt() found
-                if (expression.substring(expIndex, expIndex + OperatorFactory.SQRT.length())
+                if (source.substring(expIndex, expIndex + OperatorFactory.SQRT.length())
                         .equals(OperatorFactory.SQRT)) {
 
                     operatorStack.push(OperatorFactory.SQRT);
@@ -177,10 +131,10 @@ public class RPNExpressionConverter {
             }
         }
 
-        return expressionRPN;
+        return rpn;
     }
 
-    private static boolean isOperand(String operand) {
+    private boolean isOperand(String operand) {
         for(char symbol : operand.toCharArray()) {
             if(!Character.isDigit(symbol) && (symbol != DOT.charAt(0))) {
                 return false;
@@ -188,5 +142,117 @@ public class RPNExpressionConverter {
         }
 
         return true;
+    }
+
+    private void addOperatorToRPN(String source) throws Exception {
+        Operator operator = OperatorFactory.getOperator(source);
+
+        if (operator instanceof BinaryOperator) {
+            rpn.addToken(((BinaryOperator) operator).getToken());
+        } else {
+            rpn.addToken(((UnaryOperator) operator).getToken());
+        }
+    }
+
+    private void addCloseBracket() throws Exception {
+        while (true) {
+            if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
+                throw new Exception("No matches to closing bracket");
+            } else if (operatorStack.peek().equals(OperButtonPanel.OPEN)) {
+                operatorStack.pop();
+
+                if (operatorStack.peek().equals(OperatorFactory.LG)
+                        || operatorStack.peek().equals(OperatorFactory.LN)) {
+
+                    if (!operatorStack.isEmpty()) {
+                        try {
+                            addOperatorToRPN(operatorStack.pop());
+                        } catch (Exception ex) {
+                            throw new Exception(ex.getMessage());
+                        }
+                    }
+                }
+
+                break;
+            }
+
+            if (!operatorStack.isEmpty()) {
+                try {
+                    addOperatorToRPN(operatorStack.pop());
+                } catch (Exception ex) {
+                    throw new Exception(ex.getMessage());
+                }
+            }
+        }
+    }
+
+    private int addOpenBracket(int beginIndex) {
+        operatorStack.push(OperButtonPanel.OPEN);
+        return beginIndex + OperButtonPanel.OPEN.length() - 1;
+    }
+
+    private int addPlusMinusOperator(int beginIndex) throws Exception {
+        if (beginIndex == 0 || source.substring(beginIndex - 1, beginIndex).equals(OperButtonPanel.OPEN)) {
+            operatorStack.push(source.substring(beginIndex, beginIndex + 1));
+        } else {
+            while (true) {
+                if (operatorStack.peek().equals(EXPRESSION_BORDER)
+                        || operatorStack.peek().equals(OperButtonPanel.OPEN)) {
+
+                    operatorStack.push(source.substring(beginIndex, beginIndex + 1));
+
+                    break;
+                } else {
+                    if (!operatorStack.isEmpty()) {
+                        try {
+                            addOperatorToRPN(operatorStack.pop());
+                        } catch (Exception ex) {
+                            throw new Exception(ex.getMessage());
+                        }
+                    }
+                }
+            };
+        }
+
+        return beginIndex;
+    }
+
+    private void endParse() throws Exception {
+        while (true) {
+            if (operatorStack.peek().equals(EXPRESSION_BORDER)) {
+                break;
+            } else if (operatorStack.peek().equals(OperButtonPanel.OPEN)) {
+                throw new Exception("Open bracket in the end of the expression");
+            }
+
+            if (!operatorStack.isEmpty()) {
+                try {
+                    addOperatorToRPN(operatorStack.pop());
+                } catch (Exception ex) {
+                    throw new Exception(ex.getMessage());
+                }
+            }
+        }
+    }
+
+    private void addMultDivModOperator(int beginIndex) throws Exception {
+        while (true) {
+            if (operatorStack.peek().equals(OperatorFactory.MULTIPLICATE) ||
+                    operatorStack.peek().equals(OperatorFactory.DIVIDE) ||
+                    operatorStack.peek().equals(OperatorFactory.SQRT) ||
+                    operatorStack.peek().equals(OperatorFactory.MOD)) {
+
+                if (!operatorStack.isEmpty()) {
+                    try {
+                        addOperatorToRPN(operatorStack.pop());
+                    } catch (Exception ex) {
+                        throw new Exception(ex.getMessage());
+                    }
+                }
+            } else {
+                operatorStack.push(source.substring(beginIndex, beginIndex + 1));
+                break;
+            }
+        }
     }
 }

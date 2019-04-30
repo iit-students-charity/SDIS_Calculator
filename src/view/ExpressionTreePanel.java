@@ -10,7 +10,7 @@ import model.*;
 
 
 public class ExpressionTreePanel {
-    private static final int PANEL_WIDTH = 170;
+    private static final int PANEL_WIDTH = 200;
 
     private ExpressionTreeController expressionTreeController;
 
@@ -65,7 +65,7 @@ public class ExpressionTreePanel {
         recursiveInitialize(expressionTreeController.getRoot(), expressionTreeView.getRoot());
         traverseExpand(expressionTreeView.getRoot());
 
-        result.setText(expressionTreeController.result().source());
+        result.setText(expressionTreeController.result().getSource());
     }
 
     private void recursiveInitialize(ExpressionTreeNode expressionTreeNode, TreeItem<ExpressionTreeNode> treeItem) {
@@ -79,7 +79,6 @@ public class ExpressionTreePanel {
             );
         });
 
-        // не баг, а фича
         if (expressionTreeNode.getRightOperand() != null) {
             TreeItem<ExpressionTreeNode> right = new TreeItem<>(expressionTreeNode.getRightOperand());
 

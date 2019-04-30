@@ -85,14 +85,16 @@ public class ExpressionTreeNode {
     @Override
     public String toString() {
         if (operator == null) {
-            return value.source();
+            return value.getSource();
         } else {
             switch (state) {
                 case OPERATOR: {
-                    return ((Token) operator).source();
+                    return operator instanceof BinaryOperator ?
+                            ((BinaryOperator) operator).getSource() :
+                            ((UnaryOperator) operator).getSource();
                 }
                 case VALUE: {
-                    return getValue().source();
+                    return getValue().getSource();
                 }
             }
         }

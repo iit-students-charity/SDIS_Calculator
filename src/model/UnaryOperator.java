@@ -1,17 +1,18 @@
 package model;
 
 
-public class UnaryOperator extends Token implements Operator {
+public class UnaryOperator implements Operator, Sourcable {
     private Operand operand;
+    private Token token;
 
 
     public UnaryOperator(String source) {
-        super.source = source;
+        token = new Token(source);
     }
 
     @Override
     public Operand result() {
-        switch (source) {
+        switch (token.source()) {
             case OperatorFactory.SQRT: {
                 return new Operand(Math.sqrt(operand.value()));
             }
@@ -37,5 +38,14 @@ public class UnaryOperator extends Token implements Operator {
 
     public void setOperand(Operand operand) {
         this.operand = operand;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    @Override
+    public String getSource() {
+        return token.source();
     }
 }

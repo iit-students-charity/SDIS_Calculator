@@ -1,7 +1,12 @@
 package model;
 
-public abstract class Token {
-    protected String source;
+public class Token {
+    private String source;
+
+    public Token(String source) {
+
+        this.source = source;
+    }
 
 
     public String source() {
